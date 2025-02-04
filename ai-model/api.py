@@ -1,45 +1,42 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import Optional
-import uvicorn
-from run_llama import load_model, generate_response
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import torch
 
 app = FastAPI()
 
-# Load model at startup
-print("Loading model...")
-tokenizer, model, device = load_model()
-print("Model loaded successfully!")
+# Load the model and tokenizer
+model_path = "./Llama-2-7b-chat-hf"
+tokenizer = AutoTokenizer.from_pretrained(model_path)
+model = AutoModelForCausalLM.from_pretrained(model_path)
 
-class PromptRequest(BaseModel):
-    resume: str
+# Request Schema
+class ResumeRequest(BaseModel):
+    resume_text: str
     job_description: str
 
-class PromptResponse(BaseModel):
-    response: str
-    error: Optional[str] = None
-
-@app.post("/analyze", response_model=PromptResponse)
-async def analyze_resume(request: PromptRequest):
+@app.post("/analyze_resume")
+async def analyze_resume(input_data: ResumeRequest):
     try:
-        prompt = f"""You are an expert career coach. Compare the following resume with the provided job description.
-        
-Resume:
-{request.resume}
+        prompt = """
+        You are an expert career coach. Compare the following resume with the provided job description.
 
-Job Description:
-{request.job_description}
+        - Provide a **match score** from 0 to 100 based on how well the resume fits the job description.
+        - List the **skills that match** between the resume and the job description.
+        - Identify **missing skills or qualifications** from the job description that aren't in the resume.
+        - Give **2-3 suggestions** on how the candidate can improve their resume to better fit the role.
 
-Please provide a detailed analysis."""
+        Resume: {input_data.resume_text}
+
+        Job Description: {input_data.job_description}
+
+        Be concise and professional and try your best not to hallucinate.
+        """
         
-        response = generate_response(prompt, tokenizer, model, device)
-        if response:
-            return PromptResponse(response=response)
-        else:
-            raise HTTPException(status_code=500, detail="Failed to generate response")
-            
+        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+        outputs = model.generate(**inputs, max_length=512, temperature=0.3, top_p=0.85, do_sample=True)
+        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+        return {"response": response}
     except Exception as e:
-        return PromptResponse(response="", error=str(e))
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+        return {"error": str(e)}

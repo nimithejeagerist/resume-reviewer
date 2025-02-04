@@ -37,17 +37,20 @@ def load_model():
 
 def generate_response(prompt, tokenizer, model, device):
     try:
-        # Tokenize input
-        inputs = tokenizer(prompt, return_tensors="pt").to(device)
+        # T5 expects input in format: "summarize: " or "translate: " etc.
+        formatted_prompt = f"analyze resume: {prompt}"
         
+        # Tokenize input
+        inputs = tokenizer(formatted_prompt, return_tensors="pt", max_length=512, truncation=True)
         inputs = {k: v.to(model.device) for k, v in inputs.items()}
         
         # Generate output
         outputs = model.generate(
             **inputs,
-            max_new_tokens=100,
-            temperature=0.7,
-            top_p=0.95
+            max_length=512,
+            temperature=0.3,
+            top_p=0.85,
+            do_sample=True
         )
         
         response = tokenizer.decode(outputs[0], skip_special_tokens=True)
@@ -60,12 +63,22 @@ def generate_response(prompt, tokenizer, model, device):
 def main():
     # Load model and tokenizer
     tokenizer, model, device = load_model()
-    
-    # Sample prompt
-    prompt = "You are an expert career coach. Compare the following resume with the provided job description."
-    print()
-    print(prompt)
-    
+
+    prompt = """
+    You are an expert career coach. Compare the following resume with the provided job description.
+
+    - Provide a **match score** from 0 to 100 based on how well the resume fits the job description.
+    - List the **skills that match** between the resume and the job description.
+    - Identify **missing skills or qualifications** from the job description that aren't in the resume.
+    - Give **2-3 suggestions** on how the candidate can improve their resume to better fit the role.
+
+    Resume: {input_data.resume_text}
+
+    Job Description: {input_data.job_description}
+
+    Be concise and professional and try your best not to hallucinate.
+    """
+
     # Generate and print response
     response = generate_response(prompt, tokenizer, model, device)
     if response:
