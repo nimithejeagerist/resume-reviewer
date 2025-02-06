@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const uploadRouter = require('./src/api/upload');
-const matchRouter = require('./src/api/match');
+const uploadRouter = require('./api/upload');
+const matchRouter = require('./api/match');
 
 
 const app = express();
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.BACKEND_PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
