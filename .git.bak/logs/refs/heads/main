@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 ca44e8d94ee940fa9116d813c6c32fd108d9a8dc Nimi <takinroy@ualberta.ca> 1738612452 -0700	commit (initial): Initial setup and soooo much stuff
+ca44e8d94ee940fa9116d813c6c32fd108d9a8dc 28dc287457fb0ec2e1a64260f6aeb95a9a1d9315 Nimi <takinroy@ualberta.ca> 1738614473 -0700	commit: Remove Llama-2-7b-chat-hf model
+28dc287457fb0ec2e1a64260f6aeb95a9a1d9315 63072d1a0e47b120a714cd50ad0b055ebd972b96 Nimi <takinroy@ualberta.ca> 1738662543 -0700	commit: Refactor AI model API to simplify model loading and resume analysis
+63072d1a0e47b120a714cd50ad0b055ebd972b96 3016e49e0cb7ce8e5899161d6515d3cb843f62e2 Nimi <takinroy@ualberta.ca> 1738831133 -0700	commit: I forgot to commit all frontend changes
+3016e49e0cb7ce8e5899161d6515d3cb843f62e2 dd1b4ec6b6cceacd881fb743347b923a18537348 Nimi <takinroy@ualberta.ca> 1738831309 -0700	commit: Remove .env file from git tracking
