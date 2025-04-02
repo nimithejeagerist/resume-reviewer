@@ -3,7 +3,7 @@ const {
   DocumentAnalysisClient,
 } = require("@azure/ai-form-recognizer");
 const axios = require("axios");
-const { parseResumeSections } = require("../utils/resumeParser"); // Importing the resume parser
+const { cleanResume, cleanJobDescription } = require("../utils/cleaners");
 
 const EC2_INSTANCE_URL = `http://${process.env.EC2_PUBLIC_IP}:${process.env.EC2_PORT}`;
 
@@ -38,47 +38,26 @@ const extractTextFromPDF = async (pdfBuffer) => {
 
 const analyzeResumeAndJobDescription = async (resumeText, jobDescription) => {
   try {
-    console.log('Making requests to Llama API at:', EC2_INSTANCE_URL);
+    const cleanedResume = cleanResume(resumeText);
+    const cleanedJobDescription = cleanJobDescription(jobDescription);
 
-    // Step 1: Get Resume Summary
-    const resumeSummaryResponse = await axios.post(
-      `${EC2_INSTANCE_URL}/summarize_resume`,
-      {
-        text: resumeText
-      },
-      { timeout: 60000 }
-    );
-    console.log('Resume Summary:', resumeSummaryResponse.data);
-
-    // Step 2: Get Job Description Summary
-    const jobSummaryResponse = await axios.post(
-      `${EC2_INSTANCE_URL}/summarize_job`,
-      {
-        text: jobDescription
-      },
-      { timeout: 60000 }
-    );
-    console.log('Job Summary:', jobSummaryResponse.data);
-
-    // Step 3: Get Match Analysis
     const matchAnalysisResponse = await axios.post(
       `${EC2_INSTANCE_URL}/analyze_match`,
       {
-        resume_summary: JSON.stringify(resumeSummaryResponse.data),
-        job_summary: JSON.stringify(jobSummaryResponse.data)
+        resume: cleanedResume,
+        job_description: cleanedJobDescription,
       },
-      { timeout: 60000 }
+      { timeout: 120000 }
     );
+    console.log("Match Analysis:", matchAnalysisResponse.data);
 
-    console.log('Match Analysis:', matchAnalysisResponse.data);
     return matchAnalysisResponse.data;
-
   } catch (error) {
-    console.error("Error calling Llama API:", error);
+    console.error("Error calling Model API:", error);
     console.error("Error details:", {
       message: error.message,
       code: error.code,
-      response: error.response?.data
+      response: error.response?.data,
     });
     throw error;
   }
