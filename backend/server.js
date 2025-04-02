@@ -10,13 +10,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-console.log('Loading upload router...');
 app.use('/api', uploadRouter);
-console.log('Upload router loaded!');
 
-console.log('Loading match router...');
 app.use('/api', matchRouter);
-console.log('Match router loaded!');
 
 app.get('/', (req, res) => {
     res.send('Hello World');
