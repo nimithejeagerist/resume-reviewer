@@ -40,6 +40,10 @@ const analyzeResumeAndJobDescription = async (resumeText, jobDescription) => {
   try {
     const cleanedResume = cleanResume(resumeText);
     const cleanedJobDescription = cleanJobDescription(jobDescription);
+    console.log(EC2_INSTANCE_URL);
+
+    console.log("Cleaned Resume:", cleanedResume);
+    console.log("Cleaned Job Description:", cleanedJobDescription);
 
     const matchAnalysisResponse = await axios.post(
       `${EC2_INSTANCE_URL}/analyze_match`,

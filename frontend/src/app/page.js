@@ -80,9 +80,9 @@ export default function Home() {
       }
 
       const matchResult = await matchResponse.json();
-      console.log("Match Result:", matchResult);
-      setMatchResult(matchResult);
-      setShowSample(false);
+      // console.log("Match Result:", matchResult);
+      // setMatchResult(matchResult);
+      // setShowSample(false);
 
     } catch (error) {
       console.error("Error during review:", error);
