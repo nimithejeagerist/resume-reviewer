@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-import BgParticles from "./components/bg-particles";
 import UploadArea from "./components/upload-area";
 import JobDesc from "./components/jobDesc";
 import { sampleMatchResult } from "./constants/sampleData";
 import { Sono } from 'next/font/google';
+import ParticlesComponent from "./components/bg-particles";
 
 const sono = Sono({
   subsets: ['latin'],
@@ -32,6 +32,7 @@ export default function Home() {
       }
 
       // Show loading state or spinner here if desired
+      console.log("I got here")
 
       // First, upload the resume and wait for the URL
       const formData = new FormData();
@@ -102,7 +103,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
       <div className="absolute inset-0">
-        <BgParticles />
+        <ParticlesComponent />
       </div>
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl">
