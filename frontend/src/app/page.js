@@ -6,7 +6,7 @@ import JobDesc from "./components/jobDesc";
 import { sampleMatchResult } from "./constants/sampleData";
 import { Sono } from 'next/font/google';
 
-const sono = Sono({ 
+const sono = Sono({
   subsets: ['latin'],
   display: 'swap',
   weight: ['400', '500', '600'],
@@ -32,14 +32,14 @@ export default function Home() {
       }
 
       // Show loading state or spinner here if desired
-      
+
       // First, upload the resume and wait for the URL
       const formData = new FormData();
       formData.append("file", files[0]);
 
       console.log("Starting file upload...");
       const uploadResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_UPLOAD_ENDPOINT}`, 
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_UPLOAD_ENDPOINT}`,
         {
           method: "POST",
           body: formData,
@@ -100,23 +100,23 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen bg-black">
+    <div className="relative min-h-screen bg-black overflow-hidden">
       <div className="absolute inset-0">
         <BgParticles />
       </div>
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl">
-          <JobDesc 
+          <JobDesc
             jobDescription={jobDescription}
             setJobDescription={setJobDescription}
           />
-          <UploadArea 
+          <UploadArea
             files={files}
             setFiles={setFiles}
           />
         </div>
         <div className="flex gap-4">
-          <button 
+          <button
             onClick={handleReviewResume}
             className="mt-8 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg 
                       transition-all duration-200 text-lg font-medium
@@ -125,7 +125,7 @@ export default function Home() {
           >
             Review Resume
           </button>
-          <button 
+          <button
             onClick={handleToggleSample}
             className={`mt-8 px-8 py-3 ${showSample ? 'bg-red-600 hover:bg-red-700 hover:border-red-400' : 'bg-purple-600 hover:bg-purple-700 hover:border-purple-400'} text-white rounded-lg 
                       transition-all duration-200 text-lg font-medium
@@ -135,26 +135,26 @@ export default function Home() {
             {showSample ? 'Hide Sample Result' : 'Show Sample Result'}
           </button>
         </div>
-        
+
         {matchResult && (
-          <div 
+          <div
             className={`mt-8 w-full max-w-7xl p-6 bg-green-500 rounded-lg shadow-lg
                       text-white transform transition-all duration-500 
                       opacity-100 translate-y-0 ${sono.className}`}
-            style={{ 
-              opacity: matchResult ? 1 : 0, 
-              transform: matchResult ? 'translateY(0)' : 'translateY(20px)' 
+            style={{
+              opacity: matchResult ? 1 : 0,
+              transform: matchResult ? 'translateY(0)' : 'translateY(20px)'
             }}
           >
             <h2 className="text-2xl font-bold mb-4">Match Results</h2>
-            
+
             {matchResult.analysis && (
               <div className="space-y-6">
                 <div className="flex items-center">
                   <div className="text-5xl font-bold mr-4">{matchResult.analysis.matchScore}</div>
                   <div className="text-xl">Match Score</div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Matching Skills</h3>
                   <div className="flex flex-wrap gap-2">
@@ -165,7 +165,7 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Missing Skills</h3>
                   <div className="flex flex-wrap gap-2">
@@ -176,7 +176,7 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Improvement Suggestions</h3>
                   <ul className="list-disc pl-5 space-y-2">

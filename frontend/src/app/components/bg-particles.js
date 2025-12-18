@@ -1,7 +1,12 @@
 "use client";
+
+import dynamic from "next/dynamic";
 import { useCallback } from "react";
-import Particles from "react-particles";
-import { loadSlim } from "tsparticles-slim";
+import { loadSlim } from "@tsparticles/slim";
+
+const Particles = dynamic(() => import("@tsparticles/react").then(m => m.default), {
+  ssr: false,
+});
 
 export default function BgParticles() {
   const particlesInit = useCallback(async (engine) => {
@@ -12,39 +17,27 @@ export default function BgParticles() {
     <Particles
       id="tsparticles"
       init={particlesInit}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 0,
+        pointerEvents: "none",
+      }}
       options={{
-        background: {
-          color: "#000",
-        },
+        fullScreen: { enable: false },
+        background: { color: "#000" },
         particles: {
-          color: {
-            value: "#ffffff",
-          },
+          number: { value: 120 },
+          color: { value: "#fff" },
           move: {
             enable: true,
-            direction: "none",
-            random: true,
             speed: 1.5,
-            straight: false,
-            outModes: "out",
+            outModes: { default: "out" },
           },
-          number: {
-            value: 300,
-          },
-          opacity: {
-            value: 0.8,
-            random: true,
-            anim: {
-              enable: true,
-              speed: 1,
-              opacity_min: 0,
-              sync: false,
-            },
-          },
-          size: {
-            value: 1,
-            random: true,
-          },
+          opacity: { value: 0.8, random: true },
+          size: { value: 1, random: true },
         },
       }}
     />
