@@ -30,7 +30,7 @@ export default function Home() {
         alert("Please add a job description");
         return;
       }
-
+      
       // Show loading state or spinner here if desired
       console.log("I got here")
 

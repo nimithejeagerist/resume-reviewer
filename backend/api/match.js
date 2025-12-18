@@ -17,10 +17,10 @@ router.post('/match', async (req, res) => {
         if (!resumeBuffer) {
             return res.status(400).json({ error: 'Failed to download resume from Azure Blob Storage' });
         }
-        
+
         const matchResult = await analyzeResumeAndJobDescription(resumeText, jobDescription);
 
-        res.status(200).json({ 
+        res.status(200).json({
             analysis: matchResult.response
         });
 
