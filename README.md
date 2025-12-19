@@ -1,70 +1,48 @@
-# Getting Started with Create React App
+# Resume Reviewer
+A full-stack system that evaluates how well a resume aligns with a specific job description by combining document parsing, structured analysis, and local language models.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was built as an end-to-end exercise in system design, model orchestration, and real-world data handling, not as a production SaaS product.
 
-## Available Scripts
+## Demo
+<video src="assets/demo.mp4" width="720" controls></video>
 
-In the project directory, you can run:
+## Motivation
+Resume screening is often shallow, opaque, and overly keyword-driven.  
+I wanted to explore whether a more structured and auditable approach, combining explicit skill overlap with contextual reasoning, could produce more meaningful feedback.
 
-### `npm start`
+The goal was not to “score resumes”, but to surface:
+- where a resume clearly aligns,
+- where critical gaps exist,
+- and how those gaps relate to the actual responsibilities of a role.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## System Overview
+The system is composed of three loosely coupled services:
+- **Frontend (Next.js)**  
+  Provides a simple UI for uploading a resume, pasting a job description, and viewing structured results.
+- **Backend (Node.js)**  
+  Handles file uploads, document parsing, text cleaning, and orchestration between services.
+- **Analysis API (FastAPI + local LLM)**  
+  Performs the resume–job comparison using a local language model, returning structured JSON output.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+External services are used only where appropriate (e.g. document extraction), while model inference runs locally.
 
-### `npm test`
+## Design Considerations
+A few deliberate choices shaped this project:
+- **Structured output over free-form text**  
+  The model is constrained to return strict JSON to make the analysis auditable and UI-friendly.
+- **Explicit vs contextual reasoning**  
+  Skill overlap is treated as a strict intersection, while overall fit and scoring allow contextual judgement.
+- **Local inference**  
+  Running models locally avoids external APIs and exposes real constraints around latency, output control, and prompt robustness.
+- **Noise reduction**  
+  Resume and job description text is cleaned before analysis to reduce hallucinated overlap.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## What This Demonstrates
+This project touches multiple layers of modern software systems:
+- frontend state management and UI composition,
+- backend orchestration and cloud services (Azure),
+- document processing and data cleaning,
+- prompt design for constrained, structured LLM output,
+- reasoning about correctness vs usefulness in model-driven systems.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+It is intentionally not over-engineered, but aims to be conceptually honest and technically sound.
