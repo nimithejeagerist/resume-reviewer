@@ -32,7 +32,6 @@ export default function Home() {
       }
       
       // Show loading state or spinner here if desired
-      console.log("I got here")
 
       // First, upload the resume and wait for the URL
       const formData = new FormData();
@@ -81,9 +80,9 @@ export default function Home() {
       }
 
       const matchResult = await matchResponse.json();
-      // console.log("Match Result:", matchResult);
-      // setMatchResult(matchResult);
-      // setShowSample(false);
+      console.log("Match Result:", matchResult);
+      setMatchResult(matchResult);
+      setShowSample(false);
 
     } catch (error) {
       console.error("Error during review:", error);

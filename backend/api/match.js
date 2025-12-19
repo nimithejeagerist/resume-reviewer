@@ -24,6 +24,8 @@ router.post('/match', async (req, res) => {
             analysis: matchResult.response
         });
 
+        return matchResult
+
     } catch (error) {
         console.error('Error in match route:', error);
         res.status(500).json({ error: 'Internal server error' });

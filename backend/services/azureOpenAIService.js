@@ -5,7 +5,7 @@ const {
 const axios = require("axios");
 const { cleanResume, cleanJobDescription } = require("../utils/cleaners");
 
-const EC2_INSTANCE_URL = `http://${process.env.EC2_PUBLIC_IP}:${process.env.EC2_PORT}`;
+const MATCH_API_URL = `${process.env.MATCH_API_URL}`;
 
 const extractTextFromPDF = async (pdfBuffer) => {
   const key = process.env.DOCUMENT_INTELLIGENCE_KEY;
@@ -39,21 +39,26 @@ const extractTextFromPDF = async (pdfBuffer) => {
 const analyzeResumeAndJobDescription = async (resumeText, jobDescription) => {
   try {
     const cleanedResume = cleanResume(resumeText);
-    const cleanedJobDescription = cleanJobDescription(jobDescription);
-    console.log(EC2_INSTANCE_URL);
+    const cleanedJobDescription = jobDescription;
+    console.log(MATCH_API_URL);
 
-    console.log("Cleaned Resume:", cleanedResume);
-    console.log("Cleaned Job Description:", cleanedJobDescription);
+    // console.log("Cleaned Resume:", cleanedResume);
+    // console.log(" ");
+    // console.log(" ");
+    // console.log("Cleaned Job Description:", cleanedJobDescription);
+    // console.log(" ");
+    // console.log(" ");
+
 
     const matchAnalysisResponse = await axios.post(
-      `${EC2_INSTANCE_URL}/analyze_match`,
+      `${MATCH_API_URL}/analyze_match`,
       {
         resume: cleanedResume,
         job_description: cleanedJobDescription,
       },
       { timeout: 120000 }
     );
-    console.log("Match Analysis:", matchAnalysisResponse.data);
+    // console.log("Match Analysis:", matchAnalysisResponse.data);
 
     return matchAnalysisResponse.data;
   } catch (error) {
