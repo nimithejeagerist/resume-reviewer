@@ -3,8 +3,7 @@ A full-stack system that evaluates how well a resume aligns with a specific job 
 
 This project was built as an end-to-end exercise in system design, model orchestration, and real-world data handling, not as a production SaaS product.
 
-## Demo
-<video src="./assets/demo.mp4" width="720" controls></video>
+[▶ Watch demo video](assets/demo.mp4)
 
 ## Motivation
 Resume screening is often shallow, opaque, and overly keyword-driven.  
