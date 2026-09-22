@@ -7,7 +7,7 @@ This project was built as an end-to-end exercise in system design, model orchest
 <video src="assets/demo.mp4" width="720" controls></video>
 
 ## Motivation
-Resume screening is often shallow, opaque, and overly keyword-driven.  
+Resume screening is often shallow, opaque, and overly keyword-  driven.  
 I wanted to explore whether a more structured and auditable approach, combining explicit skill overlap with contextual reasoning, could produce more meaningful feedback.
 
 The goal was not to “score resumes”, but to surface:

@@ -44,7 +44,7 @@ const downloadFileFromAzureBlob = async (fileUrl) => {
   const fileBuffer = await streamToBuffer(downloadResponse.readableStreamBody);
 
   return fileBuffer;
-};
+};  
 
 function streamToBuffer(readableStream) {
   return new Promise((resolve, reject) => {

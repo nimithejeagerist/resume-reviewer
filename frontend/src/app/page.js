@@ -32,7 +32,7 @@ export default function Home() {
       }
       
       // Show loading state or spinner here if desired
-
+      
       // First, upload the resume and wait for the URL
       const formData = new FormData();
       formData.append("file", files[0]);

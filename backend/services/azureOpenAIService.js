@@ -58,7 +58,7 @@ const analyzeResumeAndJobDescription = async (resumeText, jobDescription) => {
       },
       { timeout: 120000 }
     );
-    // console.log("Match Analysis:", matchAnalysisResponse.data);
+    console.log("Match Analysis:", matchAnalysisResponse.data);
 
     return matchAnalysisResponse.data;
   } catch (error) {

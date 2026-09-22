@@ -33,6 +33,8 @@ async def analyze_match(input_data: MatchRequest):
 
         How to think about this (like a diligent reviewer, not a keyword bot):
 
+        # Requirements for thinking, not for you to put into the output!
+        
         1) Start by understanding the job
         - Identify what the person will actually do day-to-day.
         - Separate what is essential from what is merely preferred.
@@ -58,7 +60,7 @@ async def analyze_match(input_data: MatchRequest):
 
 
         4) matchScore (calibrated judgement)
-        - Score based on readiness for THIS role, not general talent.   
+        - Score based on readiness for THIS role, not general talent.
         - A few missing essentials should noticeably lower the score.
         - Missing mostly preferred items should lower the score only modestly.
         - Evidence matters: strong, relevant experience can outweigh a missing keyword; weak or purely adjacent experience should not.
@@ -67,11 +69,11 @@ async def analyze_match(input_data: MatchRequest):
         5) improvementSuggestions (exactly 3, highest leverage)
         - Give exactly 3 concise suggestions aimed at the biggest missingSkills items or the biggest weaknesses in evidence (impact, scope, proof).
         - Prefer suggestions that can realistically be addressed: add a project, emphasize a relevant section, quantify impact, or learn a specific tool required by the role.
-
-        Resume:
+    
+        ## Resume:
         {input_data.resume}
 
-        Job Description:
+        ## Job Description:
         {input_data.job_description}
 
         END_JSON
@@ -89,7 +91,6 @@ async def analyze_match(input_data: MatchRequest):
             "stop": ["END_JSON"],
             "repeat_penalty": 1.15
         })
-
 
         if r.status_code != 200:
             print(f"Error: Received status code {r.status_code}")
