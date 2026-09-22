@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { uploadFileToAzureBlob } = require('../services/azureBlobService');
+const { uploadSessionToAzureBlob } = require('../services/azureBlobService');
 
 // Simplify multer setup
 const upload = multer({
@@ -9,7 +9,9 @@ const upload = multer({
     limits: {
         fileSize: 10 * 1024 * 1024 
     }
-}).single('file');
+}).fields([
+    { name: 'resume', maxCount: 1 }
+]);
 
 router.post('/upload', (req, res) => {
     // Wrap multer in try-catch for better error handling
@@ -21,12 +23,19 @@ router.post('/upload', (req, res) => {
             }
             
             try {
-                if (!req.file) {
-                    return res.status(400).json({ error: 'Please upload a file' });
+                if (!req.files?.['resume']) {
+                    return res.status(400).json({ error: 'Resume is required.' });
+                }
+
+                if (!req.body.jobDescription) {
+                    return res.status(400).json( { error: 'Job description is required.' })
                 }
                 
-                const fileUrl = await uploadFileToAzureBlob(req.file.buffer, req.file.originalname);
-                res.json({ fileUrl });
+                const resumeFile = req.files['resume'][0]
+                const jobDescText = req.body.jobDescription
+                
+                const result = await uploadSessionToAzureBlob(resumeFile, jobDescText);
+                res.json(result);
                 
             } catch (error) {
                 console.error('Azure upload error:', error);

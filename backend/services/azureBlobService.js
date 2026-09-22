@@ -1,29 +1,40 @@
 const { BlobServiceClient } = require("@azure/storage-blob");
 
-const uploadFileToAzureBlob = async (fileBuffer, fileName) => {
+const uploadSessionToAzureBlob = async (resumeFile, jobDescText) => {
   const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
   if (!connectionString) {
     throw new Error("Azure Storage Connection String is not configured");
   }
-  const blobServiceClient =
-    BlobServiceClient.fromConnectionString(connectionString);
 
+  const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
   const containerClient = blobServiceClient.getContainerClient("uploads");
+  await containerClient.createIfNotExists();
 
-  const uploadedFileName = `${Date.now()}-${fileName}`;
-  const blockBlobClient = containerClient.getBlockBlobClient(uploadedFileName);
+  // Shared folder
+  const folderId = `${Date.now()}-${crypto.randomUUID()}`;
 
-  const options = {
-    blobHTTPHeaders: {
-      blobContentType: "application/octet-stream",
-      blobContentLength: fileBuffer.length,
-    },
-  };
+  // Upload resume
+  const resumeBlobName = `${folderId}/resume-${resumeFile.originalname}`;
+  const resumeBlobClient = containerClient.getBlockBlobClient(resumeBlobName);
+  await resumeBlobClient.upload(resumeFile.buffer, resumeFile.buffer.length, {
+    blobHTTPHeaders: { blobContentType: resumeFile.mimetype }
+  });
 
-  await blockBlobClient.upload(fileBuffer, fileBuffer.length, options);
+  // Convert and upload the job description
+  const jobDescBuffer = Buffer.from(jobDescText, 'utf-8');
+  const jobDescBlobName = `${folderId}/jobDesc.txt`;
+  const jobDescBlobClient = containerClient.getBlockBlobClient(jobDescBlobName);
+  await jobDescBlobClient.upload(jobDescBuffer, jobDescBuffer.length, {
+    blobHTTPHeaders: { blobContentType: 'text/plain' }
+  })
 
-  return blockBlobClient.url;
-};
+  return {
+    folderId,
+    resumeUrl: resumeBlobClient.url,
+    jobDescUrl: jobDescBlobClient.url
+  }
+
+}
 
 const downloadFileFromAzureBlob = async (fileUrl) => {
   const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
@@ -59,4 +70,4 @@ function streamToBuffer(readableStream) {
   });
 }
 
-module.exports = { uploadFileToAzureBlob, downloadFileFromAzureBlob };
+module.exports = { uploadSessionToAzureBlob, downloadFileFromAzureBlob };

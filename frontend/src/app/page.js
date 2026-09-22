@@ -35,7 +35,8 @@ export default function Home() {
       
       // First, upload the resume and wait for the URL
       const formData = new FormData();
-      formData.append("file", files[0]);
+      formData.append("resume", files[0]);
+      formData.append("jobDescription", jobDescription)
 
       console.log("Starting file upload...");
       const uploadResponse = await fetch(
