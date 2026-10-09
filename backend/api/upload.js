@@ -22,6 +22,9 @@ router.post('/upload', (req, res) => {
                 return res.status(400).json({ error: err.message });
             }
             
+            // Trying to see where the upload went wrong
+            console.log(`This is the request ${req}`);
+            
             try {
                 if (!req.files?.['resume']) {
                     return res.status(400).json({ error: 'Resume is required.' });
@@ -35,6 +38,7 @@ router.post('/upload', (req, res) => {
                 const jobDescText = req.body.jobDescription
                 
                 const result = await uploadSessionToAzureBlob(resumeFile, jobDescText);
+                console.log(`This is the result: ${JSON.stringify(result, null, 2)}`)
                 res.json(result);
                 
             } catch (error) {
