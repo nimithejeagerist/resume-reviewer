@@ -5,6 +5,7 @@ import JobDesc from "./components/jobDesc";
 import { sampleMatchResult } from "./constants/sampleData";
 import { Sono } from 'next/font/google';
 import ParticlesComponent from "./components/bg-particles";
+import { resume } from "react-dom/server";
 
 const sono = Sono({
   subsets: ['latin'],
@@ -52,15 +53,16 @@ export default function Home() {
         throw new Error(`Resume upload failed: ${errorData.error || 'Unknown error'}`);
       }
 
-      const { fileUrl } = await uploadResponse.json();
-      console.log("Upload successful, received URL:", fileUrl);
+      const { folderId, resumeUrl, jobDescUrl } = await uploadResponse.json();
 
-      if (!fileUrl) {
-        throw new Error("No file URL received from upload");
+      if (!folderId || !resumeUrl || !jobDescUrl) {
+        throw new Error("Upload workflow ran into an error");
       }
+      console.log(`Upload:\n\tfolderId: ${folderId}\n\tresumeUrl: ${resumeUrl}\n\tjobDescUrl: ${jobDescUrl}`)
 
       // Now that we have the URL, proceed with matching
       console.log("Starting match process...");
+      // We need to change the match application thingy
       const matchResponse = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}${process.env.NEXT_PUBLIC_MATCH_ENDPOINT}`,
         {
@@ -69,8 +71,8 @@ export default function Home() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            resumeUrl: fileUrl,
-            jobDescription: jobDescription,
+            resumeUrl: resumeUrl,
+            jobDescUrl: jobDescUrl,
           }),
         }
       );

@@ -5,7 +5,7 @@ const { downloadFileFromAzureBlob } = require('../services/azureBlobService');
 
 router.post('/match', async (req, res) => {
     try {
-        const { resumeUrl, jobDescription } = req.body;
+        const { resumeUrl, jobDescUrl } = req.body;
 
         if (!resumeUrl || !jobDescription) {
             return res.status(400).json({ error: 'Missing resumeUrl or jobDescription' });
