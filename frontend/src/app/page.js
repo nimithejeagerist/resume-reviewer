@@ -53,12 +53,12 @@ export default function Home() {
         throw new Error(`Resume upload failed: ${errorData.error || 'Unknown error'}`);
       }
 
-      const { folderId, resumeUrl, jobDescUrl } = await uploadResponse.json();
+      const { folderId } = await uploadResponse.json();
 
-      if (!folderId || !resumeUrl || !jobDescUrl) {
+      if (!folderId) {
         throw new Error("Upload workflow ran into an error");
       }
-      console.log(`Upload:\n\tfolderId: ${folderId}\n\tresumeUrl: ${resumeUrl}\n\tjobDescUrl: ${jobDescUrl}`)
+      console.log(`Upload:\n\tfolderId: ${folderId}`)
 
       // Now that we have the URL, proceed with matching
       console.log("Starting match process...");

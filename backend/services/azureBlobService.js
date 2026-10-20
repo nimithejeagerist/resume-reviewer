@@ -33,7 +33,6 @@ const uploadSessionToAzureBlob = async (resumeFile, jobDescText) => {
     resumeUrl: resumeBlobClient.url,
     jobDescUrl: jobDescBlobClient.url
   }
-
 }
 
 const downloadFileFromAzureBlob = async (fileUrl) => {

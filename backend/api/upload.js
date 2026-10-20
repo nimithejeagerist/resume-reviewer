@@ -38,8 +38,19 @@ router.post('/upload', (req, res) => {
                 const jobDescText = req.body.jobDescription
                 
                 const result = await uploadSessionToAzureBlob(resumeFile, jobDescText);
+                
+                fetch(process.env.LOGIC_APPS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        folderId: result.folderId,
+                        resumeUrl: result.resumeUrl,
+                        jobDescUrl: result.jobDescUrl
+                    })
+                });
+
                 console.log(`This is the result: ${JSON.stringify(result, null, 2)}`)
-                res.json(result);
+                res.json({ folderId: result.folderId });
                 
             } catch (error) {
                 console.error('Azure upload error:', error);
